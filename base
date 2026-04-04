@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maximum Reality: Comic 1</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling during sequence */
+        }
+
+        #comic-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2x2 grid for 4 panels */
+            gap: 15px;
+            max-width: 800px;
+            width: 90%;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2); /* Cyberpunk glow */
+        }
+
+        .panel {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 75%; /* Maintain 4:3 aspect ratio */
+            background-color: #1a1a1a;
+            border: 2px solid cyan; /* Optional border */
+            opacity: 0; /* Start hidden */
+            transform: scale(0.9); /* Start slightly scaled down */
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Smooth transition */
+            overflow: hidden; /* Keep images clipped */
+        }
+
+        .panel.visible {
+            opacity: 1; /* Pop in! */
+            transform: scale(1); /* Snap into place */
+        }
+
+        .panel img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Fill the frame */
+        }
+        
+        /* Optional CRT Scanline Overlay */
+        #comic-container::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="comic-container">
+        <div class="panel" id="p1">
+            <img src="path/to/generated/p1.png" alt="Maximum Reality Busters Panel 1: Data Center">
+        </div>
+
+        <div class="panel" id="p2">
+            <img src="path/to/generated/p2.png" alt="Maximum Reality Busters Panel 2: Azul's Interface">
+        </div>
+
+        <div class="panel" id="p3">
+            <img src="path/to/generated/p3.png" alt="Maximum Reality Busters Panel 3: Mochkil Leaping">
+        </div>
+
+        <div class="panel" id="p4">
+            <img src="path/to/generated/p4.png" alt="Maximum Reality Busters Panel 4: Capture Cube">
+        </div>
+    </div>
+
+    <script>
+        // Define the sequence parameters
+        const panels = document.querySelectorAll('.panel');
+        const delayMs = 3000; // 3 seconds per picture
+
+        // Function to make a panel visible
+        function showPanel(index) {
+            if (index < panels.length) {
+                panels[index].classList.add('visible');
+                
+                // Optional: Play a subtle "snap" or "pop" sound effect when the panel appears.
+                // const audio = new Audio('path/to/pop.mp3');
+                // audio.play();
+
+                // Call the next panel after the delay
+                setTimeout(() => showPanel(index + 1), delayMs);
+            } else {
+                // Sequence completed (all 4 visible)
+                // We can enable scrolling if we want
+                document.body.style.overflow = 'auto'; 
+            }
+        }
+
+        // Start the sequence after a small initial load buffer
+        window.addEventListener('load', () => {
+            setTimeout(() => showPanel(0), 1000); // 1 second buffer before start
+        });
+
+    </script>
+</body>
+</html>
