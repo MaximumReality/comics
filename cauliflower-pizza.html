@@ -163,9 +163,10 @@
             panel.className = 'panel';
             panel.id = `p${i}`;
             panel.innerHTML = `
-                <img src="pizza_panel${i}.jpg" alt="Panel ${i+1}">
-                <div class="caption">${captions[i]}</div>
-            `;
+    <img src="pizza_panel${i}${i === 3 ? '.PNG' : '.jpg'}" alt="Panel ${i+1}">
+    <div class="caption">${captions[i]}</div>
+`;
+
             container.appendChild(panel);
         }
 
