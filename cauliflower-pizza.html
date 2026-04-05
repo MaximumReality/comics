@@ -184,24 +184,42 @@
 
         // 2. Pop-in logic
         function showPanel(index) {
-            if (index < 6) {
-                document.getElementById(`p${index}`).classList.add('visible');
-                setTimeout(() => showPanel(index + 1), 3000);
-            } else {
-                setTimeout(revealRecipe, 1000);
-            }
+    // We have 4 panels now (0, 1, 2, 3)
+    if (index < 4) { 
+        const currentPanel = document.getElementById(`p${index}`);
+        if (currentPanel) {
+            currentPanel.classList.add('visible');
+            // Wait 3 seconds for the "heartbeat" effect
+            setTimeout(() => showPanel(index + 1), 3000);
         }
+    } else {
+        // --- THIS LAUNCHES THE RECIPE CARD ---
+        setTimeout(revealRecipe, 1000); 
+    }
+}
 
-        function revealRecipe() {
-            const stepList = document.getElementById('recipe-steps');
-            recipeData.steps.forEach(s => {
-                stepList.innerHTML += `<strong class="step-title">${s.title}</strong><p>${s.desc}</p><div class="mochkil-note">${s.note}</div>`;
-            });
-            document.getElementById('recipe-terminal').classList.add('active');
-        }
+function revealRecipe() {
+    const card = document.getElementById('recipe-card');
+    card.classList.add('active'); // This triggers the CSS slide-up animation
+    playRecipeSound(); // Optional: A "YUM!" or "DING!" sound effect
+}
+
 
         // Start when page loads
         window.onload = () => setTimeout(() => showPanel(0), 1000);
     </script>
+    <div id="recipe-card" class="recipe-terminal">
+    <div class="terminal-header">
+        <span class="status-dot"></span> MOCHKIL_OS: RECIPE_DOWNLOADED
+    </div>
+    <div class="recipe-content">
+        <h2 id="recipe-title"></h2>
+        <p id="chaos-rating"></p>
+        <ul id="ingredients-list"></ul>
+        <ol id="instructions-list"></ol>
+    </div>
+    <button onclick="location.reload()">RE-WATCH CHAOS 🔄</button>
+</div>
+
 </body>
 </html>
