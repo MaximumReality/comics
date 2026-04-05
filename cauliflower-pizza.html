@@ -65,23 +65,90 @@
         }
 
         /* Recipe Terminal Drawer */
-        #recipe-terminal {
-            position: fixed;
-            bottom: -100%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 500px;
-            background: rgba(0, 20, 20, 0.98);
-            border: 3px double var(--neon-cyan);
-            padding: 20px;
-            transition: bottom 0.8s ease-out;
-            z-index: 100;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
+      const recipeData = {
+    episodeTitle: "EPISODE #2: THE GREAT CAULIFLOWER GLITCH",
+    recipeName: "Crazy Cauliflower Pizza 🍕✨",
+    chaosLevel: "9.8/10 (High Splash Risk)",
+    ingredients: [
+        "1 head of cauliflower (chopped & riced)",
+        "1 cup grated vegan mozzarella (the GOAT)",
+        "1/4 cup olive oil",
+        "2 cloves garlic (minced by claws)",
+        "1 tsp dried oregano",
+        "Pinch of salt & pepper",
+        "Toppings: Olives & Artichokes (Iconic status)"
+    ],
+    instructions: [
+        "1. RICE REVOLUTION: Blend cauliflower into 'snow' at 1000% speed. Don't blink.",
+        "2. THE SQUEEZE: Use a towel to wring out every drop of water. Watch out for Azul-bots.",
+        "3. CRUST CREATION: Mix rice, oil, garlic, and seasoning. Shape into a circle on a tray.",
+        "4. BAKE PHASE 1: 425°F for 15-20 mins until golden. No mid crusts allowed.",
+        "5. TOP WITH LOVE: Pile on the vegan cheese and veggies. Make it look Michelin-star.",
+        "6. DEVOUR: Bake 5-7 more mins until bubbly. Eat with gluttony. 👑"
+    ]
+};
 
-        #recipe-terminal.active { bottom: 0; }
+const captions = [
+    "Rice Revolution! This blender is on 1000% speed. 🥦🌪️",
+    "SPLAT! Just short-circuited the Azul-bot. Oops. 💦🤖",
+    "Spice squad dance! Prismatic flavors only. 🧀✨",
+    "Masterpiece status: UNLOCKED. Devour! 🍕👑"
+];
+
+const container = document.getElementById('comic-container');
+
+// 1. Create the panels
+for(let i=0; i<4; i++) {
+    const panel = document.createElement('div');
+    panel.className = 'panel';
+    panel.id = `p${i}`;
+    panel.innerHTML = `
+        <img src="pizza_panel${i}${i === 3 ? '.PNG' : '.jpg'}" alt="Panel ${i+1}">
+        <div class="caption">${captions[i]}</div>
+    `;
+    container.appendChild(panel);
+}
+
+// 2. Pop-in logic
+function showPanel(index) {
+    if (index < 4) { 
+        const currentPanel = document.getElementById(`p${index}`);
+        if (currentPanel) {
+            currentPanel.classList.add('visible');
+            setTimeout(() => showPanel(index + 1), 3000);
+        }
+    } else {
+        setTimeout(revealRecipe, 1000); 
+    }
+}
+
+function revealRecipe() {
+    // Fill the card with the actual recipe data
+    document.getElementById('recipe-title').innerText = recipeData.recipeName;
+    document.getElementById('chaos-rating').innerText = `CHAOS LEVEL: ${recipeData.chaosLevel}`;
+    
+    const ingList = document.getElementById('ingredients-list');
+    recipeData.ingredients.forEach(ing => {
+        let li = document.createElement('li');
+        li.innerText = ing;
+        ingList.appendChild(li);
+    });
+
+    const instList = document.getElementById('instructions-list');
+    recipeData.instructions.forEach(step => {
+        let li = document.createElement('li');
+        li.innerText = step;
+        instList.appendChild(li);
+    });
+
+    // Slide up the card (Using the correct ID from your HTML)
+    const card = document.getElementById('recipe-card');
+    card.classList.add('active'); 
+}
+
+// Start when page loads
+window.onload = () => setTimeout(() => showPanel(0), 1000);
+
 
         .step-title { color: var(--neon-pink); display: block; margin-top: 10px; }
         .mochkil-note { color: #ffff00; font-size: 0.85em; border-left: 2px solid #ffff00; padding-left: 8px; margin-top: 4px; }
@@ -157,69 +224,67 @@
     ]
 };
 
-
-
-        const captions = [
+const captions = [
     "Rice Revolution! This blender is on 1000% speed. 🥦🌪️",
     "SPLAT! Just short-circuited the Azul-bot. Oops. 💦🤖",
     "Spice squad dance! Prismatic flavors only. 🧀✨",
     "Masterpiece status: UNLOCKED. Devour! 🍕👑"
 ];
 
+const container = document.getElementById('comic-container');
 
-        const container = document.getElementById('comic-container');
+// 1. Create the panels
+for(let i=0; i<4; i++) {
+    const panel = document.createElement('div');
+    panel.className = 'panel';
+    panel.id = `p${i}`;
+    panel.innerHTML = `
+        <img src="pizza_panel${i}${i === 3 ? '.PNG' : '.jpg'}" alt="Panel ${i+1}">
+        <div class="caption">${captions[i]}</div>
+    `;
+    container.appendChild(panel);
+}
 
-        // 1. Create the panels
-        for(let i=0; i<4; i++) {
-            const panel = document.createElement('div');
-            panel.className = 'panel';
-            panel.id = `p${i}`;
-            panel.innerHTML = `
-    <img src="pizza_panel${i}${i === 3 ? '.PNG' : '.jpg'}" alt="Panel ${i+1}">
-    <div class="caption">${captions[i]}</div>
-`;
-
-            container.appendChild(panel);
-        }
-
-        // 2. Pop-in logic
-        function showPanel(index) {
-    // We have 4 panels now (0, 1, 2, 3)
+// 2. Pop-in logic
+function showPanel(index) {
     if (index < 4) { 
         const currentPanel = document.getElementById(`p${index}`);
         if (currentPanel) {
             currentPanel.classList.add('visible');
-            // Wait 3 seconds for the "heartbeat" effect
             setTimeout(() => showPanel(index + 1), 3000);
         }
     } else {
-        // --- THIS LAUNCHES THE RECIPE CARD ---
         setTimeout(revealRecipe, 1000); 
     }
 }
 
 function revealRecipe() {
+    // Fill the card with the actual recipe data
+    document.getElementById('recipe-title').innerText = recipeData.recipeName;
+    document.getElementById('chaos-rating').innerText = `CHAOS LEVEL: ${recipeData.chaosLevel}`;
+    
+    const ingList = document.getElementById('ingredients-list');
+    recipeData.ingredients.forEach(ing => {
+        let li = document.createElement('li');
+        li.innerText = ing;
+        ingList.appendChild(li);
+    });
+
+    const instList = document.getElementById('instructions-list');
+    recipeData.instructions.forEach(step => {
+        let li = document.createElement('li');
+        li.innerText = step;
+        instList.appendChild(li);
+    });
+
+    // Slide up the card (Using the correct ID from your HTML)
     const card = document.getElementById('recipe-card');
-    card.classList.add('active'); // This triggers the CSS slide-up animation
-    playRecipeSound(); // Optional: A "YUM!" or "DING!" sound effect
+    card.classList.add('active'); 
 }
 
-
-        // Start when page loads
-        window.onload = () => setTimeout(() => showPanel(0), 1000);
+// Start when page loads
+window.onload = () => setTimeout(() => showPanel(0), 1000);
     </script>
-    <div id="recipe-card" class="recipe-terminal">
-    <div class="terminal-header">
-        <span class="status-dot"></span> MOCHKIL_OS: RECIPE_DOWNLOADED
-    </div>
-    <div class="recipe-content">
-        <h2 id="recipe-title"></h2>
-        <p id="chaos-rating"></p>
-        <ul id="ingredients-list"></ul>
-        <ol id="instructions-list"></ol>
-    </div>
-    <button onclick="location.reload()">RE-WATCH CHAOS 🔄</button>
-</div>
 
 </body>
 </html>
