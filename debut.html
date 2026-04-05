@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mochkil's Snack Attack: Tagine Debut</title>
+    <style>
+        :root {
+            --neon-cyan: #00ffff;
+            --neon-pink: #ff00ff;
+            --terminal-green: #00ffcc;
+        }
+
+        body {
+            background-color: #050505;
+            color: white;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Comic Grid */
+        #comic-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 95%;
+            max-width: 600px;
+            margin-top: 20px;
+            padding-bottom: 100px; /* Space for the recipe card */
+        }
+
+        .panel {
+            width: 100%;
+            border: 2px solid var(--neon-cyan);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .panel img {
+            width: 100%;
+            display: block;
+        }
+
+        /* Caption Styling (Gen-Z Style) */
+        .caption {
+            position: absolute;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            width: 100%;
+            padding: 5px;
+            font-size: 12px;
+            color: var(--neon-cyan);
+            text-align: center;
+        }
+
+        /* Recipe Terminal Drawer */
+        #recipe-terminal {
+            position: fixed;
+            bottom: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 500px;
+            background: rgba(0, 20, 20, 0.98);
+            border: 3px double var(--neon-cyan);
+            padding: 20px;
+            transition: bottom 0.8s ease-out;
+            z-index: 100;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        #recipe-terminal.active { bottom: 0; }
+
+        .step-title { color: var(--neon-pink); display: block; margin-top: 10px; }
+        .mochkil-note { color: #ffff00; font-size: 0.85em; border-left: 2px solid #ffff00; padding-left: 8px; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+    <div id="comic-container">
+        </div>
+
+    <div id="recipe-terminal">
+        <h2 style="color:var(--neon-cyan)">[DOWNLOAD COMPLETE: CRAZY TAGINE]</h2>
+        <div id="recipe-steps"></div>
+        <button onclick="document.getElementById('recipe-terminal').classList.remove('active')" style="margin-top:20px; width:100%; background:var(--neon-pink); color:white; border:none; padding:10px;">CLOSE DATA</button>
+    </div>
+
+    <script>
+        const recipeData = {
+            steps: [
+                { title: "1. Heat Oil", desc: "Heat 2 tbsp olive oil in a tagine.", note: "I spill oil everywhere – Azul cleans up! 😉" },
+                { title: "2. Sauté Onions", desc: "Cook 1 onion until translucent.", note: "My eyes water – just like Panel 2! 😭" },
+                { title: "3. Garlic Magic", desc: "Add 2 minced cloves, cook 1 min.", note: "Claws or Cloves? You decide." },
+                { title: "4. Spice Squad", desc: "Add ginger, turmeric, cinnamon, cayenne.", note: "Dancing while sprinkling... music in my head! 🎶" },
+                { title: "5. Chicken Party", desc: "Brown 1 lb chicken thighs.", note: "Locked in!" },
+                { title: "6. Liquid Love", desc: "Add tomatoes and broth. Simmer 30m.", note: "Wait for the simmer..." },
+                { title: "7. DEVOUR", desc: "Season and add 'Mochkil magic'.", note: "Michelin star masterpiece vibes." }
+            ]
+        };
+
+        const captions = [
+            "Locking in on a Moroccan classic. 🥘",
+            "Why am I crying? This is so mid. 😹😭",
+            "Shredded by the claws. 🧄💅",
+            "That kick is iconic. Sheesh! 🔥",
+            "Prismatic flavors only. 👾💎",
+            "Masterpiece vibes. Chow down! 👑"
+        ];
+
+        const container = document.getElementById('comic-container');
+
+        // 1. Create the panels
+        for(let i=0; i<6; i++) {
+            const panel = document.createElement('div');
+            panel.className = 'panel';
+            panel.id = `p${i}`;
+            panel.innerHTML = `
+                <img src="panel${i}.png" alt="Panel ${i+1}">
+                <div class="caption">${captions[i]}</div>
+            `;
+            container.appendChild(panel);
+        }
+
+        // 2. Pop-in logic
+        function showPanel(index) {
+            if (index < 6) {
+                document.getElementById(`p${index}`).classList.add('visible');
+                setTimeout(() => showPanel(index + 1), 3000);
+            } else {
+                setTimeout(revealRecipe, 1000);
+            }
+        }
+
+        function revealRecipe() {
+            const stepList = document.getElementById('recipe-steps');
+            recipeData.steps.forEach(s => {
+                stepList.innerHTML += `<strong class="step-title">${s.title}</strong><p>${s.desc}</p><div class="mochkil-note">${s.note}</div>`;
+            });
+            document.getElementById('recipe-terminal').classList.add('active');
+        }
+
+        // Start when page loads
+        window.onload = () => setTimeout(() => showPanel(0), 1000);
+    </script>
+</body>
+</html>
