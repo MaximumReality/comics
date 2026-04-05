@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mochkil's Snack Attack: Tagine Debut</title>
+    <style>
+        :root {
+            --neon-cyan: #00ffff;
+            --neon-pink: #ff00ff;
+            --terminal-green: #00ffcc;
+        }
+
+        body {
+            background-color: #050505;
+            color: white;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Comic Grid */
+        #comic-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 95%;
+            max-width: 600px;
+            margin-top: 20px;
+            padding-bottom: 100px; /* Space for the recipe card */
+        }
+
+        .panel {
+            width: 100%;
+            border: 2px solid var(--neon-cyan);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .panel img {
+            width: 100%;
+            display: block;
+        }
+
+        /* Caption Styling (Gen-Z Style) */
+        .caption {
+            position: absolute;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            width: 100%;
+            padding: 5px;
+            font-size: 12px;
+            color: var(--neon-cyan);
+            text-align: center;
+        }
+
+        /* Recipe Terminal Drawer */
+        #recipe-terminal {
+            position: fixed;
+            bottom: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 500px;
+            background: rgba(0, 20, 20, 0.98);
+            border: 3px double var(--neon-cyan);
+            padding: 20px;
+            transition: bottom 0.8s ease-out;
+            z-index: 100;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        #recipe-terminal.active { bottom: 0; }
+
+        .step-title { color: var(--neon-pink); display: block; margin-top: 10px; }
+        .mochkil-note { color: #ffff00; font-size: 0.85em; border-left: 2px solid #ffff00; padding-left: 8px; margin-top: 4px; }
+
+      .overlay-text {
+    position: absolute;
+    top: 20%;
+    right: 10%;
+    background: rgba(0, 0, 0, 0.8);
+    color: #00ffff;
+    padding: 8px 12px;
+    border: 1px solid #00ffff;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    box-shadow: 0 0 10px #00ffff;
+    pointer-events: none; /* Don't block taps */
+}
+
+.azul-error {
+    color: #ff0000;
+    border-color: #ff0000;
+    box-shadow: 0 0 10px #ff0000;
+    top: 30%;
+    left: 50%;
+    animation: blink 0.5s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+    </style>
+</head>
+<body>
+
+    <div id="comic-container">
+        </div>
+
+
+  <div class="panel" id="p1">
+    <img src="pizza_panel1.jpg">
+    <div class="overlay-text azul-error">ERROR 404: WATER DETECTED</div>
+    <div class="caption">Oops—splash-damaged the technical support. 💦🤖</div>
+</div>
+
+    <div id="recipe-terminal">
+        <h2 style="color:var(--neon-cyan)">[DOWNLOAD COMPLETE: CRAZY CAULIFLOWER PIZZA]</h2>
+        <div id="recipe-steps"></div>
+        <button onclick="document.getElementById('recipe-terminal').classList.remove('active')" style="margin-top:20px; width:100%; background:var(--neon-pink); color:white; border:none; padding:10px;">CLOSE DATA</button>
+    </div>
+
+    <script>
+        const recipeData = {
+    episodeTitle: "#2: The Great Cauliflower Glitch",
+    recipeName: "Crazy Cauliflower Pizza (by Chef Mochkil)",
+    chaosRating: "9.5/10 - Short-circuited the Azul-Bot",
+    steps: [
+        { title: "1. Create the 'Rice' Riot", desc: "Shove cauliflower into the neon purple blender. Turn speed to 1000%.", note: "Watch the snow fly! 🥦🌪️" },
+        { title: "2. The Squeeze (The 'SPLAT')", desc: "Squeeze moisture out of the cauliflower with a towel.", note: "Oops—splash-damaged the technical support. `ERROR 404: WATER DETECTED`. 💦🤖" },
+        { title: "3. Build the Vibe (Panel 3)", desc: "Mix cauliflower rice with 1 egg and 1/2 cup mozz. Form into crust.", note: "Dancing and assembly in perfect synergy! 🧀✨" },
+        { title: "4. Fire and 'Mochkil Magic'", desc: "Bake crust at 400F for 20m. Add sauce, cheese, toppings. Bake 10m more.", note: "Masterpiece status: UNLOCKED. DEVOUR! 🍕👑" }
+    ]
+};
+
+
+        const captions = [
+    "Rice Revolution! This blender is on 1000% speed. 🥦🌪️",
+    "SPLAT! Just short-circuited the Azul-bot. Oops. 💦🤖",
+    "Spice squad dance! Prismatic flavors only. 🧀✨",
+    "Masterpiece status: UNLOCKED. Devour! 🍕👑"
+];
+
+
+        const container = document.getElementById('comic-container');
+
+        // 1. Create the panels
+        for(let i=0; i<4; i++) {
+            const panel = document.createElement('div');
+            panel.className = 'panel';
+            panel.id = `p${i}`;
+            panel.innerHTML = `
+                <img src="pizza_panel${i}.jpg" alt="Panel ${i+1}">
+                <div class="caption">${captions[i]}</div>
+            `;
+            container.appendChild(panel);
+        }
+
+        // 2. Pop-in logic
+        function showPanel(index) {
+            if (index < 6) {
+                document.getElementById(`p${index}`).classList.add('visible');
+                setTimeout(() => showPanel(index + 1), 3000);
+            } else {
+                setTimeout(revealRecipe, 1000);
+            }
+        }
+
+        function revealRecipe() {
+            const stepList = document.getElementById('recipe-steps');
+            recipeData.steps.forEach(s => {
+                stepList.innerHTML += `<strong class="step-title">${s.title}</strong><p>${s.desc}</p><div class="mochkil-note">${s.note}</div>`;
+            });
+            document.getElementById('recipe-terminal').classList.add('active');
+        }
+
+        // Start when page loads
+        window.onload = () => setTimeout(() => showPanel(0), 1000);
+    </script>
+</body>
+</html>
